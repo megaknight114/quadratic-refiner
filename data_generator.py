@@ -1,5 +1,5 @@
 import torch
-def generate_quadratic_data(num_samples=100):
+def generate_quadratic_data(num_samples=10000):
     # 随机生成根 x1, x2 在 [-1, 1] 之间
     x1 = torch.rand(num_samples) * 2 - 1  
     x2 = torch.rand(num_samples) * 2 - 1  
@@ -16,5 +16,5 @@ def save_data(X, y, filepath='/home/xuzonghuan/quadratic-refiner/quadratic_data.
     print(f"Data saved to {filepath}")
 
 if __name__ == "__main__":
-    X, y = generate_quadratic_data(num_samples=100)  
+    X, y = generate_quadratic_data(num_samples=1000)  
     save_data(X, y)

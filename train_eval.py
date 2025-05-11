@@ -13,6 +13,7 @@ def train_one_epoch(model,dataloader,loss_fn,optimizer,device):
         total_loss+=loss.item()*x_batch.size(0)
         total_samples+=x_batch.size(0)
     avg_loss=total_loss/total_samples
+    print(total_samples)
     return avg_loss
 
 def evaluate(model,dataloader,loss_fn,device):
@@ -26,5 +27,6 @@ def evaluate(model,dataloader,loss_fn,device):
             loss = loss_fn(predictions, y_batch)
             total_loss += loss.item() * x_batch.size(0)
             total_samples += x_batch.size(0)
+    print(total_samples)
     avg_loss = total_loss / total_samples
     return avg_loss

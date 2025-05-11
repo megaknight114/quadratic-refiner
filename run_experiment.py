@@ -14,7 +14,7 @@ def load_data_from_file(filename='/home/xuzonghuan/quadratic-refiner/quadratic_d
     return X, y
 
 # 2. 设置单次实验，并记录实验结果
-def run_test_experiment(model_type=MLP, hidden_layers=3, hidden_units=128, loss_fn=MSE_loss, lr=1e-3, batch_size=64,epoch=100, experiment_name="test_experiment"):
+def run_test_experiment(model_type=MLP, hidden_layers=3, hidden_units=128, loss_fn=MSE_loss, lr=1e-3, batch_size=5000,epoch=10000, experiment_name="test_experiment"):
     # 设备：使用 CPU
     device = torch.device("cpu")
     print(f"Using device: {device}")
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     loss_fn = MSE_loss
     lr = 1e-3
     batch_size = 64
-    epoch=100
+    epoch=1000
     experiment_name = "test_experiment"  # 可自定义实验名
 
     # 运行测试实验
