@@ -2,10 +2,9 @@ import torch.nn as nn
 class MLP(nn.Module):
     def __init__(self, hidden_dim=128,hidden_layers=3):
         super().__init__()
-        layers = [nn.Linear(3, hidden_dim),nn.BatchNorm1d(hidden_dim), nn.ReLU()]
+        layers = [nn.Linear(3, hidden_dim), nn.ReLU()]
         for _ in range(hidden_layers):
             layers.append(nn.Linear(hidden_dim, hidden_dim))
-            layers.append(nn.BatchNorm1d(hidden_dim))
             layers.append(nn.ReLU())
         layers.append(nn.Linear(hidden_dim, 1))
         self.net = nn.Sequential(*layers)

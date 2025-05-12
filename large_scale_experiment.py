@@ -33,12 +33,12 @@ def run_large_scale_experiment():
     print(f"Using device: {device}")
 
     # 设置超参数组合
-    model_types = [MLP]  # 两种模型
-    hidden_layer_options = [3]  # 隐藏层数
-    hidden_unit_options = [128]  # 每层的隐藏单元数
+    model_types = [MLP,ResidualMLP]  # 两种模型
+    hidden_layer_options = [1,2,3,4,5,6,7,8,9,10]  # 隐藏层数
+    hidden_unit_options = [2,8,32,128]  # 每层的隐藏单元数
     learning_rates = [1e-3]  # 学习率
     batch_sizes = [500]  # 批量大小
-    epochs = [100000]  # 训练周期
+    epochs = [10000]  # 训练周期
 
     # 创建结果保存文件夹
     results_dir = '/home/xuzonghuan/quadratic-refiner/large_scale_baseline_experiment'
@@ -69,7 +69,7 @@ def run_large_scale_experiment():
 
                             # 训练与评估
                             model = model_type(hidden_dim=hidden_units, hidden_layers=hidden_layers).to(device)
-                            optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+                            optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
                             # 训练过程
                             train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
