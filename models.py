@@ -2,7 +2,7 @@ import torch.nn as nn
 class MLP(nn.Module):
     def __init__(self, hidden_dim=128,hidden_layers=3):
         super().__init__()
-        layers = [nn.Linear(3, hidden_dim), nn.ReLU()]
+        layers = [nn.Linear(4, hidden_dim), nn.ReLU()]
         for _ in range(hidden_layers):
             layers.append(nn.Linear(hidden_dim, hidden_dim))
             layers.append(nn.ReLU())
@@ -32,3 +32,4 @@ class ResidualMLP(nn.Module):
             x_res = x_res + residual  
         x_out = self.output_layer(x_res)  
         return x_out
+    
