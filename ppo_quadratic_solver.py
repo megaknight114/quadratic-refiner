@@ -28,7 +28,7 @@ ROLLOUT_STEPS = 1024      # total steps to collect before each update
 BATCH_SIZE    = 1024     # PPO 内部 mini-batch 大小
 EPOCHS        = 4         # PPO 每次 update 重复轮数
 TEST_INTERVAL = 5        # 每隔多少次迭代做一次测试打印
-MAX_ITER      = 100000      # 最大训练迭代次数
+MAX_ITER      = 1000      # 最大训练迭代次数
 N_ENVS        = 1024      # 并行环境数量
 N_TEST = 100
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -77,7 +77,7 @@ class VectorizedQuadraticEnv:
         x_new    = self.x + dx
         err_prev = self.err
         err_curr =  err_curr = (x_new - self.root).abs()
-        reward = torch.log(err_curr)-torch.log(err_prev)
+        reward = torch.log(err_prev)-torch.log(err_curr)
         reward = torch.clamp(reward, min=-10.0, max=10.0)
 
         self.x    = x_new
@@ -224,7 +224,7 @@ class TestEnv(VectorizedQuadraticEnv):
         x_new    = self.x + dx
         err_prev = self.err
         err_curr = (x_new - self.root).abs()
-        reward = torch.log(err_curr)-torch.log(err_prev)
+        reward = torch.log(err_prev)-torch.log(err_curr)
         reward = torch.clamp(reward, min=-10.0, max=10.0)
         self.x        = x_new
         self.err      = err_curr
