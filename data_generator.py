@@ -16,5 +16,5 @@ def save_data(X, y, filepath='/home/xuzonghuan/quadratic-refiner/quadratic_data.
     print(f"Data saved to {filepath}")
 
 if __name__ == "__main__":
-    X, y = generate_quadratic_data(num_samples=1000)  
+    X, y = generate_quadratic_data(num_samples=10000)  
     save_data(X, y)

@@ -9,15 +9,25 @@ from torch.utils.data import DataLoader, TensorDataset, random_split
 
 # 1. 读取数据
 def load_data_from_file(filename='/home/xuzonghuan/quadratic-refiner/quadratic_data.pt'):
-    X, y = torch.load(filename)
+    data = torch.load(filename)
+
+    if isinstance(data, tuple) and len(data) == 3:
+        X, y, z = data
+    elif isinstance(data, tuple) and len(data) == 2:
+        X, y = data
+        z = torch.zeros_like(y)  # 与 y 同形状（通常是 (N, 1)）
+        print("No prediction column found in data. Initialized z as zeros.")
+    else:
+        raise ValueError("Unsupported data format in .pt file")
+
     print(f"Loaded data from {filename}")
-    return X, y
+    return X, y, z
 
 def load_data_from_pred(filename='/home/xuzonghuan/quadratic-refiner/train_data/train_data_with_preds.csv'):
     df = pd.read_csv(filename)
-    x_columns = ['x1', 'x2', 'x3']  # 或者 df.columns[:3]
-    z_columns = ['prediction']        # 你模型预测列
-    y_column  = ['target']        # 真实值
+    x_columns = ['x1', 'x2', 'x3']
+    y_column  = ['target']
+    z_columns = ['prediction']
 
     X = torch.tensor(df[x_columns].values, dtype=torch.float32)
     z = torch.tensor(df[z_columns].values, dtype=torch.float32)
@@ -32,8 +42,10 @@ def run_test_experiment(model_type=MLP, hidden_layers=3, hidden_units=128, loss_
     device = torch.device("cpu")
     print(f"Using device: {device}")
     # 加载数据
-    X, y,z = load_data_from_pred(f'/home/xuzonghuan/quadratic-refiner/train_data/train_data_with_preds{origin-1}.csv')
-
+    if origin==0:
+        X, y,z = load_data_from_file()
+    if origin>0:
+        X, y,z = load_data_from_pred(f'/home/xuzonghuan/quadratic-refiner/train_data/train_data_with_preds{origin-1}.csv')
     # 创建 TensorDataset
     dataset = TensorDataset(X, y,z)
     # 划分数据集：80% 训练集，20% 验证集
@@ -94,7 +106,7 @@ def run_test_experiment(model_type=MLP, hidden_layers=3, hidden_units=128, loss_
     # 保存到指定文件夹
     train_data_dir = "/home/xuzonghuan/quadratic-refiner/train_data"
     os.makedirs(train_data_dir, exist_ok=True)
-    out_path = os.path.join(train_data_dir, f"train_data_with_preds{origin+1}.csv")
+    out_path = os.path.join(train_data_dir, f"train_data_with_preds{origin}.csv")
     df.to_csv(out_path, index=False)
     print(f"Predictions for final epoch saved to {out_path}")
 
@@ -107,7 +119,7 @@ def run_test_experiment(model_type=MLP, hidden_layers=3, hidden_units=128, loss_
     plt.ylabel('Loss')
     plt.legend()
     plt.grid(True)
-    plt.savefig(os.path.join(save_dir, f'loss_curve{origin+1}.png'))
+    plt.savefig(os.path.join(save_dir, f'loss_curve{origin}.png'))
     plt.close()
     print(f"Loss curve saved to {os.path.join(save_dir, f'loss_curve{origin+1}.png')}")
 
@@ -120,7 +132,7 @@ def run_test_experiment(model_type=MLP, hidden_layers=3, hidden_units=128, loss_
     plt.ylabel('Accuracy')
     plt.legend()
     plt.grid(True)
-    plt.savefig(os.path.join(save_dir, f"accuracy_curve{origin+1}.png"))
+    plt.savefig(os.path.join(save_dir, f"accuracy_curve{origin}.png"))
     plt.close()
     print(f"Accuracy curve saved to {os.path.join(save_dir, f'accuracy_curve{origin+1}.png')}")
 
@@ -128,15 +140,16 @@ def run_test_experiment(model_type=MLP, hidden_layers=3, hidden_units=128, loss_
 if __name__ == "__main__":
     # 设置实验超参数
     model_type = MLP  # 可以更改为 ResidualMLP
-    hidden_layers = 2
+    hidden_layers = 5
     hidden_units = 128
     loss_fn = tolerance_loss
     lr = 1e-3
-    batch_size = 64
-    epoch=300
+    batch_size = 500
+    epoch=100
     experiment_name = "test_experiment"  # 可自定义实验名
 
     # 运行测试实验
 
-    for i in range(1,2):
+    for i in range(0,10,1):
+        print(i)
         run_test_experiment(model_type, hidden_layers, hidden_units, loss_fn, lr, batch_size,epoch, experiment_name,i)
