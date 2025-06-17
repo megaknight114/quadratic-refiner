@@ -20,7 +20,6 @@ def compute_error_stats(csv_path):
     print(f"误差的方差: {var_error}")
 
 if __name__ == "__main__":
-    # 修改为你的 CSV 文件路径
     for i in range(0,3):
         csv_file = f"/home/xuzonghuan/quadratic-refiner/train_data/train_data_with_preds{i}.csv"
         compute_error_stats(csv_file)
