@@ -15,7 +15,7 @@ def load_data_from_file(filename='/home/xuzonghuan/quadratic-refiner/quadratic_d
         X, y, z = data
     elif isinstance(data, tuple) and len(data) == 2:
         X, y = data
-        z = torch.zeros_like(y)  # 与 y 同形状（通常是 (N, 1)）
+        z = torch.zeros_like(y)  # 与 y 同形状
         print("No prediction column found in data. Initialized z as zeros.")
     else:
         raise ValueError("Unsupported data format in .pt file")
